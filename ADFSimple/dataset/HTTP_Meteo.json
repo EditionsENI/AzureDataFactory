@@ -1,0 +1,59 @@
+{
+	"name": "HTTP_Meteo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "HTTP_OpenWeatherMap",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Ville": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": [],
+		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "name",
+				"type": "String"
+			},
+			{
+				"name": "coord.lon",
+				"type": "Double"
+			},
+			{
+				"name": "coord.lat",
+				"type": "Double"
+			},
+			{
+				"name": "main.temp",
+				"type": "Double"
+			},
+			{
+				"name": "main.humidity",
+				"type": "Int64"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "JsonFormat",
+				"jsonPathDefinition": {
+					"name": "$.['name']",
+					"coord.lon": "$.['coord']['lon']",
+					"coord.lat": "$.['coord']['lat']",
+					"main.temp": "$.['main']['temp']",
+					"main.humidity": "$.['main']['humidity']"
+				}
+			},
+			"relativeUrl": {
+				"value": "@concat('/data/2.5/weather?units=metric&appid=f7d3ed77ebdc3a6d10094af93c11a93f&q=',dataset().Ville)",
+				"type": "Expression"
+			},
+			"requestMethod": "GET"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

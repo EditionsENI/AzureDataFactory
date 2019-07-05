@@ -1,0 +1,18 @@
+{
+	"name": "SQDB_Col_Customer",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQDB_LivreDWH",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"typeProperties": {
+			"tableName": "[col].[Customer]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

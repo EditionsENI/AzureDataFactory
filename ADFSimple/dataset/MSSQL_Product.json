@@ -1,0 +1,18 @@
+{
+	"name": "MSSQL_Product",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "MSQL_NopCommerce",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"typeProperties": {
+			"tableName": "[dbo].[Product]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

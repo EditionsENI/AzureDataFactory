@@ -1,0 +1,110 @@
+{
+	"name": "Col_Product",
+	"properties": {
+		"description": "Chargement des données de produit en incrémental.",
+		"activities": [
+			{
+				"name": "LKP - DateMaj",
+				"description": "Récupération de la dernière date de mise à jour des produits.",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": "SELECT ISNULL(MAX([DateMaj]),'19000101') AS DateReprise FROM [dwh].[DimProduit]"
+					},
+					"dataset": {
+						"referenceName": "SQDB_Col_Product",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Copy - Product",
+				"description": "Activité de copie incrémentielle des données produits",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Var - DiffRQ",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": {
+							"value": "@variables('DiffRQ')",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBatchSize": 10000,
+						"preCopyScript": "TRUNCATE TABLE col.[Product]"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "MSSQL_Product",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQDB_Col_Product",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Var - DiffRQ",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "LKP - DateMaj",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "DiffRQ",
+					"value": {
+						"value": "@concat('SELECT  [Id]\n      ,[Name]\n      ,[Sku]\n      ,[Price]\n      ,[ProductCost]\n      ,[UpdatedOnUtc]\n  FROM [dbo].[Product]\n  WHERE [UpdatedOnUtc] >=''',activity('LKP - DateMaj').output.firstRow.DateReprise,'''')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"DiffRQ": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

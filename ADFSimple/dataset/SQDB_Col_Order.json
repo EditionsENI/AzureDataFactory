@@ -1,0 +1,18 @@
+{
+	"name": "SQDB_Col_Order",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQDB_LivreDWH",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"typeProperties": {
+			"tableName": "[col].[Order]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

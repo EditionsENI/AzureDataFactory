@@ -1,0 +1,131 @@
+{
+	"name": "000_Maitre_General",
+	"properties": {
+		"activities": [
+			{
+				"name": "100_Maitre_Collecte",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [
+					{
+						"name": "Une propriété personnalisé",
+						"value": "ok"
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "100_Maitre_Collecte",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "200_Maitre_Traitement_Dim",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "100_Maitre_Collecte",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "200_Maitre_Traitement_Dim",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "300_Maitre_Traitement_Faits",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "200_Maitre_Traitement_Dim",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "200_Maitre_Traitement_Dim",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Web - Envoi email",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "300_Maitre_Traitement_Faits",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-27.northeurope.logic.azure.com:443/workflows/b0a6ca241b7440a48895d01fe7f1bc2d/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=rlwwxtAKhFnHwKSIWXsx7ADt3XY5xgz9e1xlS9CB2xw",
+					"method": "POST",
+					"body": {
+						"email": "chsauget@insiders.coop",
+						"subject": "Fin de pipeline ADF",
+						"message": "Le pipeleine est terminé"
+					}
+				}
+			},
+			{
+				"name": "Web - Echec",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "100_Maitre_Collecte",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-27.northeurope.logic.azure.com:443/workflows/b0a6ca241b7440a48895d01fe7f1bc2d/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=rlwwxtAKhFnHwKSIWXsx7ADt3XY5xgz9e1xlS9CB2xw",
+					"method": "POST",
+					"body": {
+						"value": "@concat('{\"email\":\"chsaugetinsiders.coop\",\"subject\":\"Echec de pipeline ADF\",\"message\":\"'\n,activity('100_Maitre_Collecte').error\n,'}'\n)",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"test": {
+				"type": "String"
+			}
+		},
+		"annotations": [
+			"Une annotation"
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

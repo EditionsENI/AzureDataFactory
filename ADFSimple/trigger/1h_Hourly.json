@@ -1,0 +1,24 @@
+{
+	"name": "1h_Hourly",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "000_Maitre_General",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2019-06-01T09:55:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

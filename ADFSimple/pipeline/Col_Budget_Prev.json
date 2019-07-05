@@ -1,0 +1,84 @@
+{
+	"name": "Col_Budget_Prev",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy - Budget",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "HttpSource",
+						"httpRequestTimeout": "00:01:40"
+					},
+					"sink": {
+						"type": "SqlSink",
+						"preCopyScript": "TRUNCATE TABLE [col].[Budget]"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "HTTP_Budget",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQDB_Col_Budget",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy - Previsionnel",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "HttpSource",
+						"httpRequestTimeout": "00:01:40"
+					},
+					"sink": {
+						"type": "SqlSink",
+						"preCopyScript": "TRUNCATE TABLE [col].[Previsionnel]"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "HTTP_Prev",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQDB_Col_Previsionnel",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

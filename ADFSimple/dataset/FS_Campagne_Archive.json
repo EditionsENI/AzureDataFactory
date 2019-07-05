@@ -1,0 +1,33 @@
+{
+	"name": "FS_Campagne_Archive",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "FS_Marketing",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": [],
+		"type": "FileShare",
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ";",
+				"rowDelimiter": "",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"fileName": "",
+			"folderPath": {
+				"value": "@concat('Archive/Campagne/',formatDateTime(utcnow(),'yyyyMMdd'))",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

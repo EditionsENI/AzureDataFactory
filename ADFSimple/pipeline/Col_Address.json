@@ -1,0 +1,58 @@
+{
+	"name": "Col_Address",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy - Address",
+				"description": "Activité de copie des adresses dans les tables de collectes du DataWarehouse. ",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "[dbo].[Address]"
+					},
+					{
+						"name": "Destination",
+						"value": "[col].[Address]"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": "SELECT A.[Id] \n      ,[FirstName]\n      ,[LastName]\n      ,[City]\n\t  ,C.Name AS Country\n  FROM [dbo].[Address] A\n  INNER JOIN [dbo].[Country] C\n\tON A.CountryId = C.Id\n"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": "TRUNCATE TABLE col.Address"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "MSQL_Address",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQDB_Col_Address",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

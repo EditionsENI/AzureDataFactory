@@ -1,0 +1,124 @@
+{
+	"name": "Col_Campagne",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy - Campagne",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "FileSystemSource",
+						"recursive": false
+					},
+					"sink": {
+						"type": "SqlSink",
+						"preCopyScript": "TRUNCATE TABLE col.Campagne"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"Email": "EmailUtilisateur",
+							"Campagne": "Campagne"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "FS_Campagne",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQDB_Col_Campagne",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy - Archivage Campagne",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "FileSystemSource",
+						"recursive": false
+					},
+					"sink": {
+						"type": "FileSystemSink",
+						"copyBehavior": "PreserveHierarchy"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "FS_Campagne",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "FS_Campagne_Archive",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "DEL - Nettoyage des fichiers",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Copy - Campagne",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Copy - Archivage Campagne",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "FS_Campagne",
+						"type": "DatasetReference"
+					},
+					"enableLogging": false
+				}
+			}
+		],
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

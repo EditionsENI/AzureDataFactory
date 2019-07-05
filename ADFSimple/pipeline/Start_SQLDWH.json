@@ -1,0 +1,141 @@
+{
+	"name": "Start_SQLDWH",
+	"properties": {
+		"activities": [
+			{
+				"name": "WEB - Token AD",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat('https://login.microsoftonline.com/'\n,pipeline().parameters.TenantID\n,'/oauth2/token'\n)",
+						"type": "Expression"
+					},
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/x-www-form-urlencoded"
+					},
+					"body": {
+						"value": "@concat('grant_type=client_credentials&client_id='\n,pipeline().parameters.ClientID\n,'&client_secret='\n,pipeline().parameters.ClientSecret\n,'&resource='\n,pipeline().parameters.Audience\n)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "WEB - Start SQLDW",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "WEB - Token AD",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat('https://management.azure.com/subscriptions/'\n,pipeline().parameters.AbonnementID\n,'/resourceGroups/'\n,pipeline().parameters.RessourceGroup\n,'/providers/Microsoft.Sql/servers/'\n,pipeline().parameters.Server\n,'/databases/'\n,pipeline().parameters.DatabaseName\n,'/resume?api-version=2014-04-01-preview'\n)",
+						"type": "Expression"
+					},
+					"method": "POST",
+					"headers": {
+						"Authorization": {
+							"value": "@concat('Bearer '\n,activity('WEB - Token AD').output.access_token\n)",
+							"type": "Expression"
+						},
+						"Content-Type": "application/json"
+					}
+				}
+			},
+			{
+				"name": "WEB - Pause SQLDW",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "WEB - Start SQLDW",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat('https://management.azure.com/subscriptions/'\n,pipeline().parameters.AbonnementID\n,'/resourceGroups/'\n,pipeline().parameters.RessourceGroup\n,'/providers/Microsoft.Sql/servers/'\n,pipeline().parameters.Server\n,'/databases/'\n,pipeline().parameters.DatabaseName\n,'/pause?api-version=2014-04-01-preview'\n)",
+						"type": "Expression"
+					},
+					"method": "POST",
+					"headers": {
+						"Authorization": {
+							"value": "@concat('Bearer '\n,activity('WEB - Token AD').output.access_token\n)",
+							"type": "Expression"
+						},
+						"Content-Type": "application/json"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"TenantID": {
+				"type": "string",
+				"defaultValue": "18907841-8c13-49e8-9fc3-7f8b8fcbc2f5"
+			},
+			"ClientID": {
+				"type": "string",
+				"defaultValue": "f2280bac-61b9-4feb-9f69-c4e5e5f32644"
+			},
+			"ClientSecret": {
+				"type": "string",
+				"defaultValue": "cZmdM/oHzqDz2ziwVMkyzkWKu9pAxv6jUepkZJaFl9Y="
+			},
+			"Server": {
+				"type": "String",
+				"defaultValue": "adflivre"
+			},
+			"DatabaseName": {
+				"type": "String",
+				"defaultValue": "sqldwh"
+			},
+			"AbonnementID": {
+				"type": "string",
+				"defaultValue": "9cf0531d-ac3b-4585-ad1c-e0e1e028b749"
+			},
+			"RessourceGroup": {
+				"type": "string",
+				"defaultValue": "LivreADF"
+			},
+			"Audience": {
+				"type": "string",
+				"defaultValue": "https://management.core.windows.net/"
+			}
+		},
+		"folder": {
+			"name": "Technique"
+		},
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

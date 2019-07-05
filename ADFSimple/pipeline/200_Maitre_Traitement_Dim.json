@@ -1,0 +1,96 @@
+{
+	"name": "200_Maitre_Traitement_Dim",
+	"properties": {
+		"activities": [
+			{
+				"name": "SP - MAJ DimGeo",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dwh].[UpdateDimGeo]"
+				},
+				"linkedServiceName": {
+					"referenceName": "SQDB_LivreDWH",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "SP - MAJ DimClient",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "SP - MAJ DimGeo",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dwh].[UpdateDimClient]"
+				},
+				"linkedServiceName": {
+					"referenceName": "SQDB_LivreDWH",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "SP - MAJ DimProduit",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dwh].[UpdateDimProduit]"
+				},
+				"linkedServiceName": {
+					"referenceName": "SQDB_LivreDWH",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "SP - MAJ DimDate",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dwh].[UpdateDimDate]"
+				},
+				"linkedServiceName": {
+					"referenceName": "SQDB_LivreDWH",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

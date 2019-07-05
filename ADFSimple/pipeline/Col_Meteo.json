@@ -1,0 +1,138 @@
+{
+	"name": "Col_Meteo",
+	"properties": {
+		"activities": [
+			{
+				"name": "LKP - Villes",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "TRUNCATE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT   DISTINCT [City]\n FROM [dbo].[Address]"
+					},
+					"dataset": {
+						"referenceName": "MSQL_Address",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "FELC - Villes",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "LKP - Villes",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('LKP - Villes').output.value",
+						"type": "Expression"
+					},
+					"batchCount": 10,
+					"activities": [
+						{
+							"name": "Copy - Meteo",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "HttpSource",
+									"httpRequestTimeout": "00:01:40"
+								},
+								"sink": {
+									"type": "AzureSqlSink"
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "HTTP_Meteo",
+									"type": "DatasetReference",
+									"parameters": {
+										"Ville": {
+											"value": "@item().City",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQLDB_Col_Meteo",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Attendre 10s",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 10
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "TRUNCATE",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "TRUNCATE TABLE col.Meteo;\nSELECT 1;"
+					},
+					"dataset": {
+						"referenceName": "SQLDB_Col_Meteo",
+						"type": "DatasetReference"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

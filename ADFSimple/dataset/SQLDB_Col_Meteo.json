@@ -1,0 +1,19 @@
+{
+	"name": "SQLDB_Col_Meteo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQDB_LivreDWH",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "col.Meteo"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,7 @@
+{
+	"name": "IRAutoHeberge",
+	"properties": {
+		"type": "SelfHosted",
+		"description": "Integration Runtime utilisée afin d'accéder aux données ON-Premise"
+	}
+}

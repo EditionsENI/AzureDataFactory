@@ -1,0 +1,18 @@
+{
+	"name": "SQDB_Col_Budget",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQDB_LivreDWH",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"typeProperties": {
+			"tableName": "[col].[Budget]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

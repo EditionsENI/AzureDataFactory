@@ -1,0 +1,50 @@
+{
+	"name": "Col_Order",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy - Order",
+				"description": "Activité de copie des commandes dans la base de données du DataWarehouse. ",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": "SELECT O.[Id]\n      ,[CustomerId]\n      ,[CreatedOnUtc]\n      ,ProductId\n\t  ,OI.Quantity\n\t  ,OI.UnitPriceInclTax\n  FROM [dbo].[Order] AS O\n  INNER JOIN [dbo].[OrderItem] AS OI\n\tON O.Id = OI.OrderId"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBatchSize": 10000,
+						"preCopyScript": "TRUNCATE TABLE [col].[Order]"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "MSSQL_Order",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQDB_Col_Order",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

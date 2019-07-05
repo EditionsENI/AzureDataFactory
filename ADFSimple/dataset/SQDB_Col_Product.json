@@ -1,0 +1,44 @@
+{
+	"name": "SQDB_Col_Product",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQDB_LivreDWH",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "Id",
+				"type": "Int32"
+			},
+			{
+				"name": "Name",
+				"type": "String"
+			},
+			{
+				"name": "Sku",
+				"type": "String"
+			},
+			{
+				"name": "Price",
+				"type": "Decimal"
+			},
+			{
+				"name": "ProductCost",
+				"type": "Decimal"
+			},
+			{
+				"name": "UpdatedOnUtc",
+				"type": "DateTime"
+			}
+		],
+		"typeProperties": {
+			"tableName": "[col].[Product]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
