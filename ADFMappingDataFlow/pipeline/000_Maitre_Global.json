@@ -1,0 +1,53 @@
+{
+	"name": "000_Maitre_Global",
+	"properties": {
+		"activities": [
+			{
+				"name": "EP - Collecte",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Set - Date Chargement",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "100_Maitre_Collecte",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"DateChargement": {
+							"value": "@variables('DateChargement')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Set - Date Chargement",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "DateChargement",
+					"value": {
+						"value": "@utcnow()",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"DateChargement": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,112 @@
+{
+	"name": "Col_Campagne",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy - Campagne",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "VAL - Verification fichiers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "FileSystemSource",
+						"recursive": false
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSetting",
+							"copyBehavior": "MergeFiles"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "FS_Campagne",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ABFS_Campagne",
+						"type": "DatasetReference",
+						"parameters": {
+							"DateChargement": {
+								"value": "@pipeline().parameters.DateChargement",
+								"type": "Expression"
+							},
+							"Entite": "Campagne"
+						}
+					}
+				]
+			},
+			{
+				"name": "DEL - Nettoyage des fichiers",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Copy - Campagne",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "FS_Campagne",
+						"type": "DatasetReference"
+					},
+					"enableLogging": false
+				}
+			},
+			{
+				"name": "VAL - Verification fichiers",
+				"type": "Validation",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "FS_Campagne",
+						"type": "DatasetReference"
+					},
+					"timeout": "0.00:01:00",
+					"sleep": 10,
+					"childItems": true
+				}
+			}
+		],
+		"parameters": {
+			"DateChargement": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

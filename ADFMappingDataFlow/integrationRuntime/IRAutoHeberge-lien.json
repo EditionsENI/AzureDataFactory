@@ -1,0 +1,13 @@
+{
+	"name": "IRAutoHeberge-lien",
+	"properties": {
+		"type": "SelfHosted",
+		"description": "Integration Runtime permettant l'accès aux données on-premise. Il s'agit d'un lien vers l'IR de l'Azure Data Factory \"adfeni\".",
+		"typeProperties": {
+			"linkedInfo": {
+				"resourceId": "/subscriptions/9cf0531d-ac3b-4585-ad1c-e0e1e028b749/resourcegroups/livreadf/providers/Microsoft.DataFactory/factories/adfeni/integrationruntimes/IRAutoHeberge",
+				"authorizationType": "Rbac"
+			}
+		}
+	}
+}

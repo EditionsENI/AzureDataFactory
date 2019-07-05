@@ -1,0 +1,27 @@
+{
+	"name": "MSQL_Table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "MSQL_NopCommerce",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Table": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().Table",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,59 @@
+{
+	"name": "200_Maitre_Traitement",
+	"properties": {
+		"activities": [
+			{
+				"name": "DFT - UpdateDimGeo",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "UpdateDimGeo",
+						"type": "DataFlowReference"
+					}
+				}
+			},
+			{
+				"name": "DFT - UpdateCustomer",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "DFT - UpdateDimGeo",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "UpdateDimCustomer",
+						"type": "DataFlowReference"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"DateChargement": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

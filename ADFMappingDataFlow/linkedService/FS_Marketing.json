@@ -1,0 +1,18 @@
+{
+	"name": "FS_Marketing",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "Service lié relatif au dossier Marketing",
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "\\\\LIVRE\\Marketing",
+			"userId": "svc-livre",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI5YWU3ZDcwMS01ZGRiLTQ2Y2UtOWEyNi02ZmIzMmNiZmZjYjAiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "IRAutoHeberge-lien",
+			"type": "IntegrationRuntimeReference"
+		},
+		"annotations": []
+	}
+}

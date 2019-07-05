@@ -1,0 +1,325 @@
+{
+	"name": "Col_Meteo",
+	"properties": {
+		"activities": [
+			{
+				"name": "LKP - Villes",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT   DISTINCT [City]\n FROM [dbo].[Address]"
+					},
+					"dataset": {
+						"referenceName": "MSQL_Table",
+						"type": "DatasetReference",
+						"parameters": {
+							"Table": "dbo.Address"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "FELC - Villes",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "LKP - Villes",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('LKP - Villes').output.value",
+						"type": "Expression"
+					},
+					"batchCount": 10,
+					"activities": [
+						{
+							"name": "Copy - Meteo",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "HttpSource",
+									"httpRequestTimeout": "00:01:40"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSetting"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "weather"
+											},
+											"sink": {
+												"name": "weather",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "base"
+											},
+											"sink": {
+												"name": "base",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "visibility"
+											},
+											"sink": {
+												"name": "visibility",
+												"type": "Int64"
+											}
+										},
+										{
+											"source": {
+												"name": "dt"
+											},
+											"sink": {
+												"name": "dt",
+												"type": "Int64"
+											}
+										},
+										{
+											"source": {
+												"name": "id"
+											},
+											"sink": {
+												"name": "id",
+												"type": "Int64"
+											}
+										},
+										{
+											"source": {
+												"name": "name"
+											},
+											"sink": {
+												"name": "name",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "cod"
+											},
+											"sink": {
+												"name": "cod",
+												"type": "Int64"
+											}
+										},
+										{
+											"source": {
+												"name": "coord.lon"
+											},
+											"sink": {
+												"name": "coord_lon"
+											}
+										},
+										{
+											"source": {
+												"name": "coord.lat"
+											},
+											"sink": {
+												"name": "coord_lat"
+											}
+										},
+										{
+											"source": {
+												"name": "main.temp"
+											},
+											"sink": {
+												"name": "main_temp"
+											}
+										},
+										{
+											"source": {
+												"name": "main.pressure"
+											},
+											"sink": {
+												"name": "main_pressure"
+											}
+										},
+										{
+											"source": {
+												"name": "main.humidity"
+											},
+											"sink": {
+												"name": "main_humidity"
+											}
+										},
+										{
+											"source": {
+												"name": "main.temp_min"
+											},
+											"sink": {
+												"name": "main_temp_min"
+											}
+										},
+										{
+											"source": {
+												"name": "main.temp_max"
+											},
+											"sink": {
+												"name": "main_temp_max"
+											}
+										},
+										{
+											"source": {
+												"name": "wind.speed"
+											},
+											"sink": {
+												"name": "wind_speed"
+											}
+										},
+										{
+											"source": {
+												"name": "rain.3h"
+											},
+											"sink": {
+												"name": "rain_3h"
+											}
+										},
+										{
+											"source": {
+												"name": "clouds.all"
+											},
+											"sink": {
+												"name": "clouds_all"
+											}
+										},
+										{
+											"source": {
+												"name": "sys.type"
+											},
+											"sink": {
+												"name": "sys_type"
+											}
+										},
+										{
+											"source": {
+												"name": "sys.id"
+											},
+											"sink": {
+												"name": "sys_id"
+											}
+										},
+										{
+											"source": {
+												"name": "sys.message"
+											},
+											"sink": {
+												"name": "sys_message"
+											}
+										},
+										{
+											"source": {
+												"name": "sys.country"
+											},
+											"sink": {
+												"name": "sys_country"
+											}
+										},
+										{
+											"source": {
+												"name": "sys.sunrise"
+											},
+											"sink": {
+												"name": "sys_sunrise"
+											}
+										},
+										{
+											"source": {
+												"name": "sys.sunset"
+											},
+											"sink": {
+												"name": "sys_sunset"
+											}
+										}
+									]
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "HTTP_Meteo",
+									"type": "DatasetReference",
+									"parameters": {
+										"Ville": {
+											"value": "@item().City",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ABFS_Meteo",
+									"type": "DatasetReference",
+									"parameters": {
+										"DateChargement": {
+											"value": "@pipeline().parameters.DateChargement",
+											"type": "Expression"
+										},
+										"Entite": {
+											"value": "@concat('Meteo_',item().City)",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Attendre 10s",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 10
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"DateChargement": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

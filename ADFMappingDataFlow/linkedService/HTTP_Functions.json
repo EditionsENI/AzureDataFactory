@@ -1,0 +1,13 @@
+{
+	"name": "HTTP_Functions",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "https://adflivre.azurewebsites.net",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		},
+		"annotations": []
+	}
+}

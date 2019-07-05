@@ -1,0 +1,25 @@
+{
+	"name": "HTTP_Prev",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "HTTP_Functions",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": [],
+		"type": "HttpFile",
+		"typeProperties": {
+			"format": {
+				"type": "JsonFormat",
+				"filePattern": "arrayOfObjects"
+			},
+			"relativeUrl": "/api/load/excel/sharepoint?code=UUEk1laNrLpRx7lMiyaegDakKKb5V7PdTEsZ6BSgViL7yRYqbu7baA==",
+			"requestMethod": "POST",
+			"additionalHeaders": "Content-Type : application/json",
+			"requestBody": "{ \n\t\"path\":\"https://insiderscoop.sharepoint.com/sites/formation/Documents%20partages/Finance - Budget & Prev.xlsx\",\n\t\"sheet\":\"Prévisionnel\",\n\t\"sharepointLogin\" : \"1@insiders.coop\",\n\t\"sharepointPassword\" : \"Form@tion\"\n}"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

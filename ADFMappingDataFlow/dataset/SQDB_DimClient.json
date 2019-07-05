@@ -1,0 +1,68 @@
+{
+	"name": "SQDB_DimClient",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQDB_LivreDWH",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "ClientId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ClientSk",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "NomUtilisateur",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Nom",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Prenom",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Email",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GeoId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Campagne",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EstActuelle",
+				"type": "bit"
+			},
+			{
+				"name": "DateDebut",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "DateFin",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"tableName": "[dwh].[DimClientHisto]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

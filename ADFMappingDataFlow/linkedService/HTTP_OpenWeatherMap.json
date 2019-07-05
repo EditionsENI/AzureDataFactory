@@ -1,0 +1,13 @@
+{
+	"name": "HTTP_OpenWeatherMap",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "http://api.openweathermap.org",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		},
+		"annotations": []
+	}
+}

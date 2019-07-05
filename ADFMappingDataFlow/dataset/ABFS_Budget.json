@@ -1,0 +1,123 @@
+{
+	"name": "ABFS_Budget",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ABFS_Lake_DataFlow",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "20190601_Budget.parquet",
+				"folderPath": "RAW/Finance/2019/201906",
+				"fileSystem": "lake"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "Produit",
+				"type": "UTF8"
+			},
+			{
+				"name": "janv-19",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "févr-19",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "mars-19",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "avr-19",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "mai-19",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "juin-19",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "juil-19",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "août-19",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "sept-19",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "oct-19",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "nov-19",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "déc-19",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "janv-20",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "févr-20",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "mars-20",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "avr-20",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "mai-20",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "juin-20",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "juil-20",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "août-20",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "sept-20",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "oct-20",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "nov-20",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "déc-20",
+				"type": "DOUBLE"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

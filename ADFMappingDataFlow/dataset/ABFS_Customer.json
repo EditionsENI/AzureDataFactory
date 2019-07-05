@@ -1,0 +1,122 @@
+{
+	"name": "ABFS_Customer",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ABFS_Lake_DataFlow",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Traitement"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "20190101_Customer.parquet",
+				"folderPath": "RAW/NopCommerce/Customer/2019/201901",
+				"fileSystem": "lake"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "Id",
+				"type": "INT32"
+			},
+			{
+				"name": "CustomerGuid",
+				"type": "UTF8"
+			},
+			{
+				"name": "Username",
+				"type": "UTF8"
+			},
+			{
+				"name": "Email",
+				"type": "UTF8"
+			},
+			{
+				"name": "EmailToRevalidate",
+				"type": "UTF8"
+			},
+			{
+				"name": "AdminComment",
+				"type": "UTF8"
+			},
+			{
+				"name": "IsTaxExempt",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "AffiliateId",
+				"type": "INT32"
+			},
+			{
+				"name": "VendorId",
+				"type": "INT32"
+			},
+			{
+				"name": "HasShoppingCartItems",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "RequireReLogin",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "FailedLoginAttempts",
+				"type": "INT32"
+			},
+			{
+				"name": "CannotLoginUntilDateUtc",
+				"type": "INT96"
+			},
+			{
+				"name": "Active",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "Deleted",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "IsSystemAccount",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "SystemName",
+				"type": "UTF8"
+			},
+			{
+				"name": "LastIpAddress",
+				"type": "UTF8"
+			},
+			{
+				"name": "CreatedOnUtc",
+				"type": "INT96"
+			},
+			{
+				"name": "LastLoginDateUtc",
+				"type": "INT96"
+			},
+			{
+				"name": "LastActivityDateUtc",
+				"type": "INT96"
+			},
+			{
+				"name": "RegisteredInStoreId",
+				"type": "INT32"
+			},
+			{
+				"name": "BillingAddress_Id",
+				"type": "INT32"
+			},
+			{
+				"name": "ShippingAddress_Id",
+				"type": "INT32"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

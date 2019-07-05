@@ -1,0 +1,36 @@
+{
+	"name": "ABFS_Meteo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ABFS_Lake",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"DateChargement": {
+				"type": "string"
+			},
+			"Entite": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@concat(formatDateTime(dataset().DateChargement,'yyyy'),'/'\n,formatDateTime(dataset().DateChargement,'yyyyMM'),'/'\n,formatDateTime(dataset().DateChargement,'yyyyMMdd'),'_'\n,dataset().Entite\n,'.parquet'\n)",
+					"type": "Expression"
+				},
+				"folderPath": "RAW/Meteo/",
+				"fileSystem": "lake"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

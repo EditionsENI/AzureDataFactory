@@ -1,0 +1,17 @@
+{
+	"name": "MSQL_NopCommerce",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "Base de données de l'application NopCommerce",
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=LIVRE;initial catalog=NopCommerce;user id=adf",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIwZTUxYzE1Zi04YjZmLTQ2NzUtOGNkYi0zZDAyNTY2OWY3Y2IiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "IRAutoHeberge-lien",
+			"type": "IntegrationRuntimeReference"
+		},
+		"annotations": []
+	}
+}

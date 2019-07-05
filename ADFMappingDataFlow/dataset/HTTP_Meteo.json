@@ -1,0 +1,123 @@
+{
+	"name": "HTTP_Meteo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "HTTP_OpenWeatherMap",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Ville": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": [],
+		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "weather"
+			},
+			{
+				"name": "base"
+			},
+			{
+				"name": "visibility"
+			},
+			{
+				"name": "dt"
+			},
+			{
+				"name": "id"
+			},
+			{
+				"name": "name"
+			},
+			{
+				"name": "cod"
+			},
+			{
+				"name": "coord.lon"
+			},
+			{
+				"name": "coord.lat"
+			},
+			{
+				"name": "main.temp"
+			},
+			{
+				"name": "main.pressure"
+			},
+			{
+				"name": "main.humidity"
+			},
+			{
+				"name": "main.temp_min"
+			},
+			{
+				"name": "main.temp_max"
+			},
+			{
+				"name": "wind.speed"
+			},
+			{
+				"name": "rain.3h"
+			},
+			{
+				"name": "clouds.all"
+			},
+			{
+				"name": "sys.type"
+			},
+			{
+				"name": "sys.id"
+			},
+			{
+				"name": "sys.message"
+			},
+			{
+				"name": "sys.country"
+			},
+			{
+				"name": "sys.sunrise"
+			},
+			{
+				"name": "sys.sunset"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "JsonFormat",
+				"jsonPathDefinition": {
+					"weather": "$.['weather']",
+					"base": "$.['base']",
+					"visibility": "$.['visibility']",
+					"dt": "$.['dt']",
+					"id": "$.['id']",
+					"name": "$.['name']",
+					"cod": "$.['cod']",
+					"coord.lon": "$.['coord']['lon']",
+					"coord.lat": "$.['coord']['lat']",
+					"main.temp": "$.['main']['temp']",
+					"main.pressure": "$.['main']['pressure']",
+					"main.humidity": "$.['main']['humidity']",
+					"main.temp_min": "$.['main']['temp_min']",
+					"main.temp_max": "$.['main']['temp_max']",
+					"wind.speed": "$.['wind']['speed']",
+					"rain.3h": "$.['rain']['3h']",
+					"clouds.all": "$.['clouds']['all']",
+					"sys.type": "$.['sys']['type']",
+					"sys.id": "$.['sys']['id']",
+					"sys.message": "$.['sys']['message']",
+					"sys.country": "$.['sys']['country']",
+					"sys.sunrise": "$.['sys']['sunrise']",
+					"sys.sunset": "$.['sys']['sunset']"
+				}
+			},
+			"relativeUrl": "/data/2.5/weather?units=metric&appid=f7d3ed77ebdc3a6d10094af93c11a93f&q=Paris",
+			"requestMethod": "GET"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

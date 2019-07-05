@@ -1,0 +1,90 @@
+{
+	"name": "ABFS_Address",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ABFS_Lake_DataFlow",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Traitement"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "20190101_Address.parquet",
+				"folderPath": "RAW/NopCommerce/Address/2019/201901",
+				"fileSystem": "lake"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "Id",
+				"type": "INT32"
+			},
+			{
+				"name": "FirstName",
+				"type": "UTF8"
+			},
+			{
+				"name": "LastName",
+				"type": "UTF8"
+			},
+			{
+				"name": "Email",
+				"type": "UTF8"
+			},
+			{
+				"name": "Company",
+				"type": "UTF8"
+			},
+			{
+				"name": "CountryId",
+				"type": "INT32"
+			},
+			{
+				"name": "StateProvinceId",
+				"type": "INT32"
+			},
+			{
+				"name": "County",
+				"type": "UTF8"
+			},
+			{
+				"name": "City",
+				"type": "UTF8"
+			},
+			{
+				"name": "Address1",
+				"type": "UTF8"
+			},
+			{
+				"name": "Address2",
+				"type": "UTF8"
+			},
+			{
+				"name": "ZipPostalCode",
+				"type": "UTF8"
+			},
+			{
+				"name": "PhoneNumber",
+				"type": "UTF8"
+			},
+			{
+				"name": "FaxNumber",
+				"type": "UTF8"
+			},
+			{
+				"name": "CustomAttributes",
+				"type": "UTF8"
+			},
+			{
+				"name": "CreatedOnUtc",
+				"type": "INT96"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

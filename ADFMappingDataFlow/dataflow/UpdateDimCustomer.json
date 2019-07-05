@@ -1,0 +1,76 @@
+{
+	"name": "UpdateDimCustomer",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ABFS_Customer",
+						"type": "DatasetReference"
+					},
+					"name": "SrcCustomer"
+				},
+				{
+					"dataset": {
+						"referenceName": "ABFS_Address",
+						"type": "DatasetReference"
+					},
+					"name": "SrcAddress"
+				},
+				{
+					"dataset": {
+						"referenceName": "SQDB_DimGeo",
+						"type": "DatasetReference"
+					},
+					"name": "SrcDimGeo"
+				},
+				{
+					"dataset": {
+						"referenceName": "ABFS_Country",
+						"type": "DatasetReference"
+					},
+					"name": "SrcCountry"
+				},
+				{
+					"dataset": {
+						"referenceName": "SQDB_DimClient",
+						"type": "DatasetReference"
+					},
+					"name": "SrcDimClient"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SQDB_DimClient",
+						"type": "DatasetReference"
+					},
+					"name": "DestDimClient"
+				},
+				{
+					"dataset": {
+						"referenceName": "SQDB_DimClient",
+						"type": "DatasetReference"
+					},
+					"name": "DestUpdate"
+				},
+				{
+					"dataset": {
+						"referenceName": "SQDB_DimClient",
+						"type": "DatasetReference"
+					},
+					"name": "DestDimClientSCD2"
+				},
+				{
+					"dataset": {
+						"referenceName": "SQDB_DimClient",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"script": "\n\nsource(output(\n\t\tId as integer,\n\t\tCustomerGuid as string,\n\t\tUsername as string,\n\t\tEmail as string,\n\t\tEmailToRevalidate as string,\n\t\tAdminComment as string,\n\t\tIsTaxExempt as boolean,\n\t\tAffiliateId as integer,\n\t\tVendorId as integer,\n\t\tHasShoppingCartItems as boolean,\n\t\tRequireReLogin as boolean,\n\t\tFailedLoginAttempts as integer,\n\t\tCannotLoginUntilDateUtc as timestamp,\n\t\tActive as boolean,\n\t\tDeleted as boolean,\n\t\tIsSystemAccount as boolean,\n\t\tSystemName as string,\n\t\tLastIpAddress as string,\n\t\tCreatedOnUtc as timestamp,\n\t\tLastLoginDateUtc as timestamp,\n\t\tLastActivityDateUtc as timestamp,\n\t\tRegisteredInStoreId as integer,\n\t\tBillingAddress_Id as integer,\n\t\tShippingAddress_Id as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> SrcCustomer\nsource(output(\n\t\tId as integer,\n\t\tFirstName as string,\n\t\tLastName as string,\n\t\tEmail as string,\n\t\tCompany as string,\n\t\tCountryId as integer,\n\t\tStateProvinceId as integer,\n\t\tCounty as string,\n\t\tCity as string,\n\t\tAddress1 as string,\n\t\tAddress2 as string,\n\t\tZipPostalCode as string,\n\t\tPhoneNumber as string,\n\t\tFaxNumber as string,\n\t\tCustomAttributes as string,\n\t\tCreatedOnUtc as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> SrcAddress\nsource(output(\n\t\tGeoId as integer,\n\t\tVille as string,\n\t\tPays as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> SrcDimGeo\nsource(output(\n\t\tId as integer,\n\t\tName as string,\n\t\tAllowsBilling as boolean,\n\t\tAllowsShipping as boolean,\n\t\tTwoLetterIsoCode as string,\n\t\tThreeLetterIsoCode as string,\n\t\tNumericIsoCode as integer,\n\t\tSubjectToVat as boolean,\n\t\tPublished as boolean,\n\t\tDisplayOrder as integer,\n\t\tLimitedToStores as boolean\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> SrcCountry\nsource(output(\n\t\tClientId as integer,\n\t\tClientSk as integer,\n\t\tNomUtilisateur as string,\n\t\tNom as string,\n\t\tPrenom as string,\n\t\tEmail as string,\n\t\tGeoId as integer,\n\t\tCampagne as string,\n\t\tEstActuelle as boolean,\n\t\tDateDebut as timestamp,\n\t\tDateFin as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'SELECT  [ClientId]\\n      ,[ClientSk]\\n      ,[NomUtilisateur]\\n      ,[Nom]\\n      ,[Prenom]\\n      ,[Email]\\n      ,[GeoId]\\n      ,[Campagne]\\n      ,[EstActuelle]\\n      ,[DateDebut]\\n      ,[DateFin]\\n  FROM [dwh].[DimClientHisto]\\n  WHERE DateFin IS NULL',\n\tformat: 'query') ~> SrcDimClient\nFilterNull, SelectAddressCountry lookup(BillingAddress_Id == AddressId,\n\tbroadcast: 'none')~> LkpAddress\nLkpAddress, SrcDimGeo lookup(City == Ville\n\t&& Country == Pays,\n\tbroadcast: 'none')~> LkpGeo\nSrcAddress, SrcCountry lookup(CountryId == SrcCountry@Id,\n\tbroadcast: 'none')~> LkpCountry\nLkpCountry select(mapColumn(\n\t\tAddressId = SrcAddress@Id,\n\t\tFirstName,\n\t\tLastName,\n\t\tEmail,\n\t\tCity,\n\t\tCountry = Name\n\t)) ~> SelectAddressCountry\nLkpGeo select(mapColumn(\n\t\tClientSk = Id,\n\t\tUsername,\n\t\tEmail = SrcCustomer@Email,\n\t\tFirstName,\n\t\tLastName,\n\t\tGeoId\n\t)) ~> SelectNormClient\nSelectNormClient, SrcDimClient lookup(SelectNormClient@ClientSk == SrcDimClient@ClientSk,\n\tbroadcast: 'none')~> LkpDimClient\nSelectRenommage split(isNull(ClientId),\n\t!isNull(ClientId)\r\n&& New_GeoId != Lkp_GeoId,\n\t!isNull(ClientId)\r\n&& (New_Username != Lkp_NomUtilisateur\r\n|| New_FirstName != Lkp_Prenom\r\n|| New_LastName != Lkp_Nom\r\n|| New_Email != Lkp_Email\r\n),\n\tdisjoint: false) ~> Split@(NouveauClient, ChangementAdresseSCD2, ChangementSCD1, AucunChangement)\nSplit@NouveauClient derive(EstActuelle = true(),\n\t\tDateDebut = currentUTC()) ~> NouvellesLignesAjoutsCol\nLkpDimClient select(mapColumn(\n\t\tClientSk = SelectNormClient@ClientSk,\n\t\tNew_Username = Username,\n\t\tNew_Email = SelectNormClient@Email,\n\t\tNew_FirstName = FirstName,\n\t\tNew_LastName = LastName,\n\t\tNew_GeoId = SelectNormClient@GeoId,\n\t\tClientId,\n\t\tLkp_ClientSk = SrcDimClient@ClientSk,\n\t\tLkp_NomUtilisateur = NomUtilisateur,\n\t\tLkp_Nom = Nom,\n\t\tLkp_Prenom = Prenom,\n\t\tLkp_Email = SrcDimClient@Email,\n\t\tLkp_GeoId = SrcDimClient@GeoId\n\t)) ~> SelectRenommage\nSrcCustomer filter(!isNull(Username)) ~> FilterNull\nSplit@ChangementSCD1 alterRow(updateIf(true())) ~> AlterUpdate\nSplit@ChangementAdresseSCD2 derive(EstActuelle = true(),\n\t\tDateDebut = currentUTC()) ~> AjoutColNouvelleLigneSCD2\nSplit@ChangementAdresseSCD2 derive(EstActuelle = false(),\n\t\tDateFin = currentUTC()) ~> AjoutColDesactiveLigne\nAjoutColDesactiveLigne alterRow(updateIf(true())) ~> AlterRow1\nNouvellesLignesAjoutsCol sink(input(\n\t\tClientId as integer,\n\t\tClientSk as integer,\n\t\tNomUtilisateur as string,\n\t\tNom as string,\n\t\tPrenom as string,\n\t\tEmail as string,\n\t\tGeoId as integer,\n\t\tCampagne as string,\n\t\tEstActuelle as boolean,\n\t\tDateDebut as timestamp,\n\t\tDateFin as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'table',\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tmapColumn(\n\t\tClientSk,\n\t\tNomUtilisateur = New_Username,\n\t\tNom = New_LastName,\n\t\tPrenom = New_FirstName,\n\t\tEmail = New_Email,\n\t\tGeoId = New_GeoId,\n\t\tEstActuelle,\n\t\tDateDebut\n\t)) ~> DestDimClient\nAlterUpdate sink(input(\n\t\tClientId as integer,\n\t\tClientSk as integer,\n\t\tNomUtilisateur as string,\n\t\tNom as string,\n\t\tPrenom as string,\n\t\tEmail as string,\n\t\tGeoId as integer,\n\t\tCampagne as string,\n\t\tEstActuelle as boolean,\n\t\tDateDebut as timestamp,\n\t\tDateFin as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'table',\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['ClientSk'],\n\tmapColumn(\n\t\tClientSk,\n\t\tNomUtilisateur = New_Username,\n\t\tNom = New_LastName,\n\t\tPrenom = New_FirstName,\n\t\tEmail = New_Email\n\t)) ~> DestUpdate\nAjoutColNouvelleLigneSCD2 sink(input(\n\t\tClientId as integer,\n\t\tClientSk as integer,\n\t\tNomUtilisateur as string,\n\t\tNom as string,\n\t\tPrenom as string,\n\t\tEmail as string,\n\t\tGeoId as integer,\n\t\tCampagne as string,\n\t\tEstActuelle as boolean,\n\t\tDateDebut as timestamp,\n\t\tDateFin as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'table',\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tmapColumn(\n\t\tClientSk,\n\t\tNomUtilisateur = New_Username,\n\t\tNom = New_LastName,\n\t\tPrenom = New_FirstName,\n\t\tEmail = New_Email,\n\t\tGeoId = New_GeoId,\n\t\tEstActuelle,\n\t\tDateDebut\n\t)) ~> DestDimClientSCD2\nAlterRow1 sink(input(\n\t\tClientId as integer,\n\t\tClientSk as integer,\n\t\tNomUtilisateur as string,\n\t\tNom as string,\n\t\tPrenom as string,\n\t\tEmail as string,\n\t\tGeoId as integer,\n\t\tCampagne as string,\n\t\tEstActuelle as boolean,\n\t\tDateDebut as timestamp,\n\t\tDateFin as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'table',\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['ClientSk'],\n\tmapColumn(\n\t\tClientSk,\n\t\tEstActuelle,\n\t\tDateFin\n\t)) ~> sink1"
+		}
+	}
+}

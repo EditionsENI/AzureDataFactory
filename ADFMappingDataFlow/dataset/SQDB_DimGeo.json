@@ -1,0 +1,33 @@
+{
+	"name": "SQDB_DimGeo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQDB_LivreDWH",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Traitement"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "GeoId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Ville",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Pays",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"tableName": "[dwh].[DimGeo]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

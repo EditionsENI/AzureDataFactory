@@ -1,0 +1,90 @@
+{
+	"name": "100_Maitre_Collecte",
+	"properties": {
+		"activities": [
+			{
+				"name": "EP - Col - Tables SQL",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Col_Tables",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"DateChargement": {
+							"value": "@pipeline().parameters.DateChargement",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "EP - Col - Meteo",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Col_Meteo",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"DateChargement": {
+							"value": "@pipeline().parameters.DateChargement",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "EP - Col - Budget Prev",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Col_Budget_Prev",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"DateChargement": {
+							"value": "@pipeline().parameters.DateChargement",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "EP - Col - Campagne",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Col_Campagne",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"DateChargement": {
+							"value": "@pipeline().parameters.DateChargement",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"DateChargement": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

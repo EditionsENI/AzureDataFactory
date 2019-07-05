@@ -1,0 +1,27 @@
+{
+	"name": "UpdateFactBudget",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ABFS_Budget",
+						"type": "DatasetReference"
+					},
+					"name": "SrcBudget"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "EmployeeFiles1",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"script": "\n\nsource(output(\n\t\tProduit as string,\n\t\t{janv-19} as double,\n\t\t{févr-19} as double,\n\t\t{mars-19} as double,\n\t\t{avr-19} as double,\n\t\t{mai-19} as double,\n\t\t{juin-19} as double,\n\t\t{juil-19} as double,\n\t\t{août-19} as double,\n\t\t{sept-19} as double,\n\t\t{oct-19} as double,\n\t\t{nov-19} as double,\n\t\t{déc-19} as double,\n\t\t{janv-20} as double,\n\t\t{févr-20} as double,\n\t\t{mars-20} as double,\n\t\t{avr-20} as double,\n\t\t{mai-20} as double,\n\t\t{juin-20} as double,\n\t\t{juil-20} as double,\n\t\t{août-20} as double,\n\t\t{sept-20} as double,\n\t\t{oct-20} as double,\n\t\t{nov-20} as double,\n\t\t{déc-20} as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> SrcBudget\nSrcBudget unpivot(output(\n\t\tMois as string,\n\t\tAmount as double\n\t),\n\tungroupBy(Produit),\n\tlateral: true,\n\tignoreNullPivots: true) ~> UnpivotMois\nUnpivotMois pivot(groupBy(Produit),\n\tpivotBy(Mois),\n\tsum(Amount),\n\tcolumnNaming: '$N$V',\n\tlateral: true) ~> PivosMois\nPivosMois sink(input(\n\t\tEmpID as string,\n\t\tRegion as string,\n\t\tStatus as string,\n\t\tFunction as string,\n\t\tLevel as string,\n\t\tRole as string,\n\t\tStartDate as string,\n\t\tEndDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> sink1"
+		}
+	}
+}

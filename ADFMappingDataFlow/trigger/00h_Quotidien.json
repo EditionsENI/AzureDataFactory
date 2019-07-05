@@ -1,0 +1,25 @@
+{
+	"name": "00h_Quotidien",
+	"properties": {
+		"description": "déclenchement quotidien de l'actualisation du dwh",
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "000_Maitre_Global",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2019-05-31T00:00:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

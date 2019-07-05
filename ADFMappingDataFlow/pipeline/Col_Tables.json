@@ -1,0 +1,84 @@
+{
+	"name": "Col_Tables",
+	"properties": {
+		"activities": [
+			{
+				"name": "FELC - Copie Tables",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@json('[\n   {\n       \"Table\" : \"dbo.Address\"\n       ,\"Entite\":\"Address\"\n   },\n   {\n       \"Table\" : \"dbo.Country\"\n       ,\"Entite\":\"Country\"\n   },\n   {\n       \"Table\" : \"dbo.Customer\"\n       ,\"Entite\":\"Customer\"\n   },\n   {\n       \"Table\" : \"dbo.Order\"\n       ,\"Entite\":\"Order\"\n   },\n   {\n       \"Table\" : \"dbo.OrderItem\"\n       ,\"Entite\":\"OrderItem\"\n   },\n   {\n       \"Table\" : \"dbo.Product\"\n       ,\"Entite\":\"Product\"\n   }\n]')",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy - Table vers ABFS",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSetting"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "MSQL_Table",
+									"type": "DatasetReference",
+									"parameters": {
+										"Table": {
+											"value": "@item().Table",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ABFS_Fichier",
+									"type": "DatasetReference",
+									"parameters": {
+										"DateChargement": {
+											"value": "@pipeline().parameters.DateChargement",
+											"type": "Expression"
+										},
+										"Entite": {
+											"value": "@item().Entite",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"DateChargement": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Collecte"
+		},
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

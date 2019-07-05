@@ -1,0 +1,41 @@
+{
+	"name": "UpdateDimGeo",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ABFS_Address",
+						"type": "DatasetReference"
+					},
+					"name": "SourceAddress"
+				},
+				{
+					"dataset": {
+						"referenceName": "ABFS_Country",
+						"type": "DatasetReference"
+					},
+					"name": "SourceCountry"
+				},
+				{
+					"dataset": {
+						"referenceName": "SQDB_DimGeo",
+						"type": "DatasetReference"
+					},
+					"name": "SourceDimGeo"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SQDB_DimGeo",
+						"type": "DatasetReference"
+					},
+					"name": "DestDimGeo"
+				}
+			],
+			"script": "\n\nsource(output(\n\t\tId as integer,\n\t\tFirstName as string,\n\t\tLastName as string,\n\t\tEmail as string,\n\t\tCompany as string,\n\t\tCountryId as integer,\n\t\tStateProvinceId as integer,\n\t\tCounty as string,\n\t\tCity as string,\n\t\tAddress1 as string,\n\t\tAddress2 as string,\n\t\tZipPostalCode as string,\n\t\tPhoneNumber as string,\n\t\tFaxNumber as string,\n\t\tCustomAttributes as string,\n\t\tCreatedOnUtc as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> SourceAddress\nsource(output(\n\t\tId as integer,\n\t\tName as string,\n\t\tAllowsBilling as boolean,\n\t\tAllowsShipping as boolean,\n\t\tTwoLetterIsoCode as string,\n\t\tThreeLetterIsoCode as string,\n\t\tNumericIsoCode as integer,\n\t\tSubjectToVat as boolean,\n\t\tPublished as boolean,\n\t\tDisplayOrder as integer,\n\t\tLimitedToStores as boolean\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> SourceCountry\nsource(output(\n\t\tGeoId as integer,\n\t\tVille as string,\n\t\tPays as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> SourceDimGeo\nSelectAddress, SelectCountry join(CountryId == SelectCountry@Id,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> InnerJoinCountryId\nSourceAddress select(mapColumn(\n\t\tId,\n\t\tCity,\n\t\tCountryId\n\t)) ~> SelectAddress\nSourceCountry select(mapColumn(\n\t\tId,\n\t\tCountryName = Name\n\t)) ~> SelectCountry\nInnerJoinCountryId, SourceDimGeo exists(City == Ville\n\t&& CountryName == Pays,\n\tnegate:true,\n\tbroadcast: 'none')~> Exists\nExists sink(input(\n\t\tGeoId as integer,\n\t\tVille as string,\n\t\tPays as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'table',\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tmapColumn(\n\t\tVille = City,\n\t\tPays = CountryName\n\t)) ~> DestDimGeo"
+		}
+	}
+}

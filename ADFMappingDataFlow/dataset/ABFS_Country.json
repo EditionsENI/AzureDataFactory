@@ -1,0 +1,70 @@
+{
+	"name": "ABFS_Country",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ABFS_Lake_DataFlow",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Traitement"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "20190101_Country.parquet",
+				"folderPath": "RAW/NopCommerce/Country/2019/201901",
+				"fileSystem": "lake"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "Id",
+				"type": "INT32"
+			},
+			{
+				"name": "Name",
+				"type": "UTF8"
+			},
+			{
+				"name": "AllowsBilling",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "AllowsShipping",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "TwoLetterIsoCode",
+				"type": "UTF8"
+			},
+			{
+				"name": "ThreeLetterIsoCode",
+				"type": "UTF8"
+			},
+			{
+				"name": "NumericIsoCode",
+				"type": "INT32"
+			},
+			{
+				"name": "SubjectToVat",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "Published",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "DisplayOrder",
+				"type": "INT32"
+			},
+			{
+				"name": "LimitedToStores",
+				"type": "BOOLEAN"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
