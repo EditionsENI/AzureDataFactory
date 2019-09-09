@@ -2,7 +2,7 @@
 	"name": "ABFS_Lake",
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
-		"description": "Lac de données",
+		"description": "Lac de donnéess",
 		"annotations": [],
 		"type": "AzureBlobFS",
 		"typeProperties": {
