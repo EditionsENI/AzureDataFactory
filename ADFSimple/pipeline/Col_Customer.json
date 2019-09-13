@@ -4,7 +4,7 @@
 		"activities": [
 			{
 				"name": "Copy - Customer",
-				"description": "Activité de copie des client dans la base de données du DataWarehouse. ",
+				"description": "Activité de copie des clients dans la base de données du DataWarehouse. ",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
