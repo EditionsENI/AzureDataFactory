@@ -1,0 +1,11 @@
+{
+    "name": "SQDB_AdventureWorks",
+    "type": "Microsoft.DataFactory/factories/linkedservices",
+    "properties": {
+        "description": "Base de données d'AdventureWorks",
+        "type": "AzureSqlDatabase",
+        "typeProperties": {
+            "connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=adflivre.database.windows.net;initial catalog=advwrks;user id=chsauget;Password=<password>"
+           }
+    }
+}

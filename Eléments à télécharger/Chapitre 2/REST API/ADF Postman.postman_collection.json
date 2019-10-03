@@ -1,0 +1,112 @@
+{
+	"info": {
+		"_postman_id": "d5df71cb-3380-4ea1-bb21-fb0a62cb6083",
+		"name": "ADF Postman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Retrieve Auth",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "f2280bac-61b9-4feb-9f69-c4e5e5f32644",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "cZmdM/oHzqDz2ziwVMkyzkWKu9pAxv6jUepkZJaFl9Y=",
+							"type": "text"
+						},
+						{
+							"key": "resource",
+							"value": "https://management.core.windows.net/",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://login.microsoftonline.com/18907841-8c13-49e8-9fc3-7f8b8fcbc2f5/oauth2/token",
+					"protocol": "https",
+					"host": [
+						"login",
+						"microsoftonline",
+						"com"
+					],
+					"path": [
+						"18907841-8c13-49e8-9fc3-7f8b8fcbc2f5",
+						"oauth2",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Service",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Im5iQ3dXMTF3M1hrQi14VWFYd0tSU0xqTUhHUSIsImtpZCI6Im5iQ3dXMTF3M1hrQi14VWFYd0tSU0xqTUhHUSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuY29yZS53aW5kb3dzLm5ldC8iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC8xODkwNzg0MS04YzEzLTQ5ZTgtOWZjMy03ZjhiOGZjYmMyZjUvIiwiaWF0IjoxNTQ3OTExMDA1LCJuYmYiOjE1NDc5MTEwMDUsImV4cCI6MTU0NzkxNDkwNSwiYWlvIjoiNDJKZ1lIajU0ZTdPNlU4YjUyWjZ2TXJNTFZBcEFBQT0iLCJhcHBpZCI6ImYyMjgwYmFjLTYxYjktNGZlYi05ZjY5LWM0ZTVlNWYzMjY0NCIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0LzE4OTA3ODQxLThjMTMtNDllOC05ZmMzLTdmOGI4ZmNiYzJmNS8iLCJvaWQiOiIyYjQwNWU5NC1kMTI2LTQ3YjktYmM5Yi05ZTA1MGFkYjlhYmIiLCJzdWIiOiIyYjQwNWU5NC1kMTI2LTQ3YjktYmM5Yi05ZTA1MGFkYjlhYmIiLCJ0aWQiOiIxODkwNzg0MS04YzEzLTQ5ZTgtOWZjMy03ZjhiOGZjYmMyZjUiLCJ1dGkiOiJ1enlaUEJqVTZVLUFnOFpJeDQ5QUFBIiwidmVyIjoiMS4wIn0.riZCHdhQeZwCl7J8zL_1Mahgl15VkF_75wZt8RTdstAoy-mv_cSyeRovoANhIqWGXKvRtF52qPxz1Oxg350pMnijHG4XDCQ6M1U0w6CFPLZ0cp7D_fRYRT-ArCtNgYJysUSbITh6dCCAhG6l73fSwWXLyYJgUIMEIcjaC2677ThUTBGw3tO3JV3qIFDxnCtLcBF1FQMAzyHC2luVy5l6hNPMoY3ygiEZ8epEVoXrl20Tn04KeUJl91_pjMcae92Q4KC0-OkxwLzuf8Gcn9L5LSs_YeibSzknurGt2TDf-gqkBogqTRX-6-DZbGVNhasMHaevRnu6BnSWP4O6fih1mQ",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"ADFENI\",\r\n    \"location\": \"West Europe\",\r\n    \"properties\": {},\r\n    \"identity\": {\r\n        \"type\": \"SystemAssigned\"\r\n    }\r\n}"
+				},
+				"url": {
+					"raw": "https://management.azure.com/subscriptions/9cf0531d-ac3b-4585-ad1c-e0e1e028b749/resourceGroups/LivreADF/providers/Microsoft.DataFactory/factories/ADFENI?api-version=2017-09-01-preview",
+					"protocol": "https",
+					"host": [
+						"management",
+						"azure",
+						"com"
+					],
+					"path": [
+						"subscriptions",
+						"9cf0531d-ac3b-4585-ad1c-e0e1e028b749",
+						"resourceGroups",
+						"LivreADF",
+						"providers",
+						"Microsoft.DataFactory",
+						"factories",
+						"ADFENI"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2017-09-01-preview"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

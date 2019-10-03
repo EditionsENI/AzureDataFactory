@@ -1,0 +1,17 @@
+{
+    "name": "SQDB_Col_Customer",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "SQDB_AdventureWorks",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "AdventureWorks"
+        },
+        "type": "AzureSqlTable",
+        "typeProperties": {
+            "tableName": "col.Customer"
+        }
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

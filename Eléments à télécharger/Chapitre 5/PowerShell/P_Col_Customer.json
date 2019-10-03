@@ -1,0 +1,61 @@
+{
+"name": "Col_Customer",
+"properties": {
+	"activities": [
+		{
+			"name": "Copy - Customer",
+			"type": "Copy",
+			"policy": {
+				"timeout": "7.00:00:00",
+				"retry": 3,
+				"retryIntervalInSeconds": 30,
+				"secureOutput": false,
+				"secureInput": false
+			},
+			"typeProperties": {
+				"source": {
+					"type": "FileSystemSource",
+					"recursive": false
+				},
+				"sink": {
+					"type": "SqlSink",
+					"writeBatchSize": 10000,
+					"preCopyScript": "IF(OBJECT_ID('col.[Customer]') IS NULL)
+					BEGIN
+						CREATE TABLE col.[Customer](
+						[CustomerID] [int],
+						[PersonID] [int] NULL,
+						[StoreID] [int] NULL,
+						[TerritoryID] [int] NULL,
+						[AccountNumber] varchar(40) NULL,
+						[rowguid] varchar(40) NULL, 
+						[ModifiedDate] [datetime] NULL
+						) 
+					END
+					ELSE
+					BEGIN
+						TRUNCATE TABLE col.[Customer]
+					END"
+				},
+				"enableStaging": false
+			},
+			"inputs": [
+				{
+					"referenceName": "FS_Customer",
+					"type": "DatasetReference"
+				}
+			],
+			"outputs": [
+				{
+					"referenceName": "SQDB_Col_Customer",
+					"type": "DatasetReference"
+				}
+			]
+		}
+	],
+	"folder": {
+		"name": "AdventureWorks"
+	}
+},
+"type": "Microsoft.DataFactory/factories/pipelines"
+}

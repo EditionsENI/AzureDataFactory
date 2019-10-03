@@ -1,0 +1,296 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "type": "string",
+            "metadata": "Data Factory Name",
+            "defaultValue": "ADFENI"
+        },
+        "FS_PartageOnPremise_password": {
+            "type": "secureString",
+            "metadata": "Secure string for 'password' of 'FS_PartageOnPremise'"
+        },
+        "SQDB_AdventureWorks_connectionString": {
+            "type": "secureString",
+            "metadata": "Secure string for 'connectionString' of 'SQDB_AdventureWorks'"
+        },
+        "AzureBlobStorage1_connectionString": {
+            "type": "secureString",
+            "metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+        },
+        "FS_Customer_properties_typeProperties_fileName": {
+            "type": "string",
+            "defaultValue": "Customer.csv"
+        },
+        "FS_Customer_properties_typeProperties_folderPath": {
+            "type": "string",
+            "defaultValue": "AdventureWorks CSV"
+        },
+        "FS_PartageOnPremise_properties_typeProperties_userId": {
+            "type": "string",
+            "defaultValue": "chsauget"
+        }
+    },
+    "variables": {
+        "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('factoryName'), '/Col_Customer')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "Copy - Customer",
+                        "type": "Copy",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 3,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "FileSystemSource",
+                                "recursive": false
+                            },
+                            "sink": {
+                                "type": "SqlSink",
+                                "writeBatchSize": 10000,
+                                "preCopyScript": "IF(OBJECT_ID('col.[Customer]') IS NULL) \nBEGIN\n\tCREATE TABLE col.[Customer](\n\t\t[CustomerID] [int],\n\t\t[PersonID] [int] NULL,\n\t\t[StoreID] [int] NULL,\n\t\t[TerritoryID] [int] NULL,\n\t\t[AccountNumber] varchar(40) NULL,\n\t\t[rowguid] varchar(40) NULL, \n\t\t[ModifiedDate] [datetime] NULL\n\t) \nEND\nELSE\nBEGIN\n\tTRUNCATE TABLE col.[Customer]\nEND"
+                            },
+                            "enableStaging": false
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "FS_Customer",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "SQDB_Col_Customer",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    }
+                ],
+                "folder": {
+                    "name": "AdventureWorks"
+                },
+                "annotations": []
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/datasets/FS_Customer')]",
+                "[concat(variables('factoryId'), '/datasets/SQDB_Col_Customer')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/FS_Customer')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "FS_PartageOnPremise",
+                    "type": "LinkedServiceReference"
+                },
+                "folder": {
+                    "name": "AdventureWorks"
+                },
+                "annotations": [],
+                "type": "FileShare",
+                "structure": [
+                    {
+                        "name": "CustomerID",
+                        "type": "Int32",
+                        "description": "Identifiant source du client"
+                    },
+                    {
+                        "name": "PersonID",
+                        "type": "Int32",
+                        "description": "Identifiant de la personne"
+                    },
+                    {
+                        "name": "StoreID",
+                        "type": "Int32",
+                        "description": "Identifiant du magasin"
+                    },
+                    {
+                        "name": "TerritoryID",
+                        "type": "Int32",
+                        "description": "Identifiant du territoire"
+                    },
+                    {
+                        "name": "AccountNumber",
+                        "type": "String",
+                        "description": "Numéro du compte client"
+                    },
+                    {
+                        "name": "rowguid",
+                        "type": "String",
+                        "description": "Guid"
+                    },
+                    {
+                        "name": "ModifiedDate",
+                        "type": "DateTime",
+                        "description": "Date de modification du client"
+                    }
+                ],
+                "typeProperties": {
+                    "format": {
+                        "type": "TextFormat",
+                        "columnDelimiter": "\t",
+                        "rowDelimiter": "\n",
+                        "quoteChar": "\"",
+                        "nullValue": "\\N",
+                        "encodingName": null,
+                        "treatEmptyAsNull": true,
+                        "skipLineCount": 0,
+                        "firstRowAsHeader": false
+                    },
+                    "fileName": "[parameters('FS_Customer_properties_typeProperties_fileName')]",
+                    "folderPath": "[parameters('FS_Customer_properties_typeProperties_folderPath')]"
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/FS_PartageOnPremise')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/SQDB_Col_Customer')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "SQDB_AdventureWorks",
+                    "type": "LinkedServiceReference"
+                },
+                "folder": {
+                    "name": "AdventureWorks"
+                },
+                "annotations": [],
+                "type": "AzureSqlTable",
+                "structure": [
+                    {
+                        "name": "CustomerID",
+                        "type": "Decimal",
+                        "precision": 32,
+                        "scale": 6
+                    },
+                    {
+                        "name": "PersonID",
+                        "type": "Int32",
+                        "precision": 10,
+                        "scale": 255
+                    },
+                    {
+                        "name": "StoreID",
+                        "type": "Int32",
+                        "precision": 10,
+                        "scale": 255
+                    },
+                    {
+                        "name": "TerritoryID",
+                        "type": "Int32",
+                        "precision": 10,
+                        "scale": 255
+                    },
+                    {
+                        "name": "AccountNumber",
+                        "type": "String",
+                        "precision": 255,
+                        "scale": 255
+                    },
+                    {
+                        "name": "rowguid",
+                        "type": "String",
+                        "precision": 255,
+                        "scale": 255
+                    },
+                    {
+                        "name": "ModifiedDate",
+                        "type": "DateTime",
+                        "precision": 23,
+                        "scale": 3
+                    }
+                ],
+                "typeProperties": {
+                    "tableName": "col.Customer"
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/SQDB_AdventureWorks')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/IRAutoHeberge')]",
+            "type": "Microsoft.DataFactory/factories/integrationRuntimes",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "type": "SelfHosted",
+                "description": "Un Integration Runtime utilisé afin de charger des données depuis un réseau privé vers Azure.",
+                "typeProperties": {}
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/FS_PartageOnPremise')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "description": "Service lié référençant un espace partagé dans le réseau privé de l'entreprise",
+                "annotations": [],
+                "type": "FileServer",
+                "typeProperties": {
+                    "host": "\\\\IRAutoHeberge\\Dépôt",
+                    "userId": "[parameters('FS_PartageOnPremise_properties_typeProperties_userId')]",
+                    "password": {
+                        "type": "SecureString",
+                        "value": "[parameters('FS_PartageOnPremise_password')]"
+                    }
+                },
+                "connectVia": {
+                    "referenceName": "IRAutoHeberge",
+                    "type": "IntegrationRuntimeReference"
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/integrationRuntimes/IRAutoHeberge')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/SQDB_AdventureWorks')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "description": "Base de données d'AdventureWorks",
+                "annotations": [],
+                "type": "AzureSqlDatabase",
+                "typeProperties": {
+                    "connectionString": "[parameters('SQDB_AdventureWorks_connectionString')]"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureBlobStorage",
+                "typeProperties": {
+                    "connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+                }
+            },
+            "dependsOn": []
+        }
+    ]
+}

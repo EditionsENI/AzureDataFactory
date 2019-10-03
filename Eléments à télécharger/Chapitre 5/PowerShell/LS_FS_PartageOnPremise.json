@@ -1,0 +1,20 @@
+{
+    "name": "FS_PartageOnPremise",
+    "type": "Microsoft.DataFactory/factories/linkedservices",
+    "properties": {
+        "description": "Service lié référençant un espace partagé dans le réseau privé de l'entreprise",
+        "type": "FileServer",
+        "typeProperties": {
+            "host": "\\\\IRAutoHeberge\\Dépôt",
+            "userId": "chsauget",
+			"password": {
+                "type": "SecureString",
+                "value": "toto"
+            }
+        },
+        "connectVia": {
+            "referenceName": "LivreIRAutoHeb",
+            "type": "IntegrationRuntimeReference"
+        }
+    }
+}

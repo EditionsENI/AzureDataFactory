@@ -1,0 +1,66 @@
+{
+    "name": "FS_Customer",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "FS_PartageOnPremise",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "AdventureWorks"
+        },
+        "type": "FileShare",
+        "structure": [
+            {
+                "name": "CustomerID",
+                "type": "Int32",
+                "description": "Identifiant source du client"
+            },
+            {
+                "name": "PersonID",
+                "type": "Int32",
+                "description": "Identifiant de la personne"
+            },
+            {
+                "name": "StoreID",
+                "type": "Int32",
+                "description": "Identifiant du magasin"
+            },
+            {
+                "name": "TerritoryID",
+                "type": "Int32",
+                "description": "Identifiant du territoire"
+            },
+            {
+                "name": "AccountNumber",
+                "type": "String",
+                "description": "Numéro du compte client"
+            },
+            {
+                "name": "rowguid",
+                "type": "String",
+                "description": "Guid"
+            },
+            {
+                "name": "ModifiedDate",
+                "type": "DateTime",
+                "description": "Date de modification du client"
+            }
+        ],
+        "typeProperties": {
+            "format": {
+                "type": "TextFormat",
+                "columnDelimiter": "\t",
+                "rowDelimiter": "\n",
+                "quoteChar": "\"",
+                "nullValue": "\\N",
+                "encodingName": null,
+                "treatEmptyAsNull": true,
+                "skipLineCount": 0,
+                "firstRowAsHeader": false
+            },
+            "fileName": "Customer.csv",
+            "folderPath": "AdventureWorks CSV"
+        }
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

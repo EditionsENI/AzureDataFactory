@@ -1,0 +1,24 @@
+{
+    "name": "Daily_01h_Schedule",
+    "properties": {
+        "description": "Planification quotidienne � 1h du matin",
+        "runtimeState": "Stopped",
+        "pipelines": [
+            {
+                "pipelineReference": {
+                    "referenceName": "Col_Customer",
+                    "type": "PipelineReference"
+                }
+            }
+        ],
+        "type": "ScheduleTrigger",
+        "typeProperties": {
+            "recurrence": {
+                "frequency": "Day",
+                "interval": 1,
+                "startTime": "2019-03-30T01:00:00Z",
+                "timeZone": "UTC"
+            }
+        }
+    }
+}
