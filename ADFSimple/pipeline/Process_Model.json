@@ -50,7 +50,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"url": {
-						"value": "@concat(replace(pipeline().parameters.Server,'asazure://','https://')\n,'/models/',pipeline().parameters.DatabaseName\n,'/refreshes')",
+						"value": "@concat('https://'\n,pipeline().parameters.Region\n,'.asazure.windows.net/servers/'\n,pipeline().parameters.Server\n,'/models/'\n,pipeline().parameters.DatabaseName\n,'/refreshes')",
 						"type": "Expression"
 					},
 					"method": "POST",
@@ -96,7 +96,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"url": {
-									"value": "@concat(replace(pipeline().parameters.Server,'asazure://','https://')\n,'/models/',pipeline().parameters.DatabaseName\n,'/refreshes')",
+									"value": "@concat('https://'\n,pipeline().parameters.Region\n,'.asazure.windows.net/servers/'\n,pipeline().parameters.Server\n,'/models/'\n,pipeline().parameters.DatabaseName\n,'/refreshes')",
 									"type": "Expression"
 								},
 								"method": "GET",
