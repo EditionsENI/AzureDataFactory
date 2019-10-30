@@ -193,7 +193,7 @@
 			},
 			"Server": {
 				"type": "String",
-				"defaultValue": "asazure://northeurope.asazure.windows.net/meetup"
+				"defaultValue": "meetup"
 			},
 			"DatabaseName": {
 				"type": "String",
