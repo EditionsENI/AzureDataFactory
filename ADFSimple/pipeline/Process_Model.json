@@ -56,7 +56,7 @@
 					"method": "POST",
 					"headers": {
 						"Authorization": {
-							"value": "@concat('Bearer '\n,activity('WEB - Token AD').output\n)",
+							"value": "@concat('Bearer '\n,activity('WEB - Token AD').output.access_token\n)",
 							"type": "Expression"
 						},
 						"Content-Type": "application/json"
